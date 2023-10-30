@@ -25,7 +25,7 @@ jobs:
           args: >-
             pandoc
             --output=./docs/documentations/build/documentation.pdf
-            ./docs/documentation.md
+            ./docs/documentations/documentation.md
       - name: Build presentation
         uses: docker://ghcr.io/kevin07042002/pandoc_texlive-full:latest
         with:
@@ -33,7 +33,7 @@ jobs:
             pandoc
             --output=./docs/presentations/build/presentation.pdf
             -t beamer
-            ./docs/presenations/presentation.md
+            ./docs/presentations/presentation.md
       - name: GIT commit and push docs
         if: github.event_name == 'push'
         run: |
