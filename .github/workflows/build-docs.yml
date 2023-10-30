@@ -1,0 +1,50 @@
+name: build-docs
+
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  build-presentation:
+
+    name: build-docs
+    runs-on: ubuntu-latest
+    env:
+      CI_COMMIT_MESSAGE: Continuous Integration Build Artifacts
+      CI_COMMIT_AUTHOR: Continuous Integration
+    steps:
+      - name: Check out the repo
+        uses: actions/checkout@v2
+      - name: Prepare build environment
+        run: |
+          mkdir -p ./docs/documentations/build
+          mkdir -p ./docs/presentations/build
+      - name: Build documentation
+        uses: docker://ghcr.io/kevin07042002/pandoc_texlive-full:latest
+        with:
+          args: >-
+            pandoc
+            --output=./docs/documentations/build/documentation.pdf
+            ./docs/documentation.md
+      - name: Build presentation
+        uses: docker://ghcr.io/kevin07042002/pandoc_texlive-full:latest
+        with:
+          args: >-
+            pandoc
+            --output=./docs/presentations/build/presentation.pdf
+            -t beamer
+            ./docs/presenations/presentation.md
+      - name: GIT commit and push docs
+        if: github.event_name == 'push'
+        run: |
+          git config --global user.name "${{ env.CI_COMMIT_AUTHOR }}"
+          git config --global user.email "${{ secrets.MAIL_ADRESS }}"
+          git add ./docs/build/
+          git commit -m "${{ env.CI_COMMIT_MESSAGE }}"
+          git push
+      - name: Archive production artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: build
+          path: |
+            ./docs
