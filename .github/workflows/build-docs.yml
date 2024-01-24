@@ -20,14 +20,14 @@ jobs:
           mkdir -p ./docs/documentations/build
           mkdir -p ./docs/presentations/build
       - name: Build documentation
-        uses: docker://ghcr.io/kevin07042002/pandoc_texlive-full:latest
+        uses: docker://ghcr.io/kevin07042002/pandoc_texlive-full:v1.0.3
         with:
           args: >-
             pandoc
             --output=./docs/documentations/build/documentation.pdf
             ./docs/documentations/documentation.md
       - name: Build presentation
-        uses: docker://ghcr.io/kevin07042002/pandoc_texlive-full:latest
+        uses: docker://ghcr.io/kevin07042002/pandoc_texlive-full:v1.0.3
         with:
           args: >-
             pandoc
